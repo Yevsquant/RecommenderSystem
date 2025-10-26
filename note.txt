@@ -1,0 +1,14 @@
+data.py:
+1. Using Poisson distribution to simulate the popularity of items. Since all items are not interacted equally, some are very popular and the other are not. The Poisson distribution can statistically capture this realistic skewed pattern.
+2. meta can be as a global in the env
+3. feature: dot->scoring function; cos->scale-invariant, direction-oriented(similarity); L2-norm; L1-norm ...
+4. Static data? Each time running the program requires a long time to generate data
+candidate.py:
+1. directly sort all items given a user!!!
+
+ranker.py:
+1. LR (MLP+FNN) -> DNN
+
+rerank.py:
+1. Other rerank_diversity
+
