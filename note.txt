@@ -12,3 +12,7 @@ ranker.py:
 rerank.py:
 1. Other rerank_diversity
 
+abtest.py:
+1. Separate buckets should have similar indices 
+2. Ways to compute ctr given base ctr
+
