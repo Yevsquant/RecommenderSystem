@@ -29,3 +29,34 @@ def build_feature_row(uid, iid, meta):
         "popularity": float(meta["item_df"].loc[iid, "popularity"]),
         "age_days": float(meta["item_df"].loc[iid, "age_days"]),
     }
+
+def featurize(interactions: pd.DataFrame, meta: dict) -> pd.DataFrame:
+    """
+    Build a feature dataframe for ranking model training
+    Args:
+        interactions : DataFrame
+            with cols: user_id, item_id, clicked (and other engagement labels if available)
+        meta : dict
+            contains embeddings and item metadata:
+            { "user_emb": np.ndarray, "item_emb": np.ndarray, "items_df": pd.DataFrame}
+    Returns:
+        pd.DataFrame
+            Feature dataframe with columns: [user_id, item_id, dot, cosine, popularity, age_days]
+    """
+    user_emb = meta["user_emb"]
+    item_emb = meta["item_emb"]
+    items_df = meta["item_df"]
+
+    feats = []
+    for _, row in interactions.iterrows():
+        u = int(row.user_id)
+        i = int(row.item_id)
+
+        feat = build_feature_row(u, i, meta)
+        # Preserve existing label columns (clicked, liked, etc.)
+        for col in interactions.columns:
+            if col not in feat and col not in ["user_id", "item_id"]:
+                feat[col] = row[col]
+        feats.append(feat)
+
+    return pd.DataFrame(feats)

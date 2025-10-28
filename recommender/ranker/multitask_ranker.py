@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class MultiObjectiveRanker(nn.module):
+class MultiObjectiveRanker(nn.Module):
     """
     Multi-objective ranking model
     Predict CTR, Like rate, Collect rate, and Share rate simultaneously
