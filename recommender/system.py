@@ -7,14 +7,17 @@ from recommender.retrieval.item_cf import ItemCF
 from recommender.ranker.multitask_ranker import MultiObjectiveRanker
 
 class RecommenderSystem:
-    def __init__(self, meta, ranker_model: MultiObjectiveRanker, item_cf: ItemCF):
+    def __init__(self, meta, ranker_model, item_cf: ItemCF):
         self.meta = meta
         self.ranker =ranker_model
         self.item_cf = item_cf
     
     def recommend(self, uid, top_k=10):
         # retrieval
-        candidates = candidate_generation(uid, self.meta, top_n=200)
+        if self.item_cf:
+            candidates = self.item_cf.recommend(uid, top_k=200)
+        else:
+            candidates = candidate_generation(uid, self.meta, top_n=200)
         feats = pd.DataFrame([build_feature_row(uid, iid, self.meta) for iid in candidates])
         # ranker
         scores = self.ranker.predict_proba(feats)
