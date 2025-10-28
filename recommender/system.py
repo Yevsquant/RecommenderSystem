@@ -4,6 +4,7 @@ import torch
 from .data import build_feature_row
 from .candidate import candidate_generation
 from .rerank import rerank_diversity
+from recommender.retrieval.item_cf import ItemCF
 from recommender.ranker.multitask_ranker import MultiObjectiveRanker
 
 class RecommenderSystem:
