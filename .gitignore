@@ -8,3 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Branch md
+recommender/retrieval/EXTENSION.md
+recommender/ranker/EXTENSION.md
+recommender/rerank/EXTENSION.md
