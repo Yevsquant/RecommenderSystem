@@ -5,6 +5,7 @@ build/
 dist/
 wheels/
 *.egg-info
+*.pt
 
 # Virtual environments
 .venv
@@ -13,3 +14,6 @@ wheels/
 recommender/retrieval/EXTENSION.md
 recommender/ranker/EXTENSION.md
 recommender/rerank/EXTENSION.md
+
+# custom files
+note.txt

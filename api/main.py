@@ -3,7 +3,7 @@ from fastapi import FastAPI, Query
 from pydantic import BaseModel
 import random
 from recommender.data import simulate_data
-from recommender.ranker import Ranker
+from recommender.ranker.baseranker import Ranker
 from recommender.system import RecommenderSystem
 
 app = FastAPI(title="Recommender System API")
