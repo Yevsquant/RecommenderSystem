@@ -3,11 +3,14 @@ import pandas as pd
 from .data import build_feature_row
 from .candidate import candidate_generation
 from .rerank import rerank_diversity
+from recommender.retrieval.item_cf import ItemCF
+from recommender.ranker.multitask_ranker import MultiObjectiveRanker
 
 class RecommenderSystem:
-    def __init__(self, meta, ranker):
+    def __init__(self, meta, ranker_model: MultiObjectiveRanker, item_cf: ItemCF):
         self.meta = meta
-        self.ranker =ranker
+        self.ranker =ranker_model
+        self.item_cf = item_cf
     
     def recommend(self, uid, top_k=10):
         # retrieval
