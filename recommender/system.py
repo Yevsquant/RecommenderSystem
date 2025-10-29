@@ -5,12 +5,14 @@ from .data import build_feature_row
 from .candidate import candidate_generation
 from .rerank import rerank_diversity
 from recommender.retrieval.item_cf import ItemCF
+from recommender.ranker.factorization_machine import FactorizationMachine
 from recommender.ranker.multitask_ranker import MultiObjectiveRanker
 
 class RecommenderSystem:
-    def __init__(self, meta, ranker_model, item_cf: ItemCF):
+    def __init__(self, meta, ranker_model=None, item_cf=None):
         self.meta = meta
         self.ranker =ranker_model
+        self.item_cf = item_cf
     
     def recommend(self, uid, top_k=10):
         # retrieval
@@ -22,7 +24,14 @@ class RecommenderSystem:
         # ranker
         scores = None
         ranked = None
-        if isinstance(self.ranker, MultiObjectiveRanker):
+        if isinstance(self.ranker, FactorizationMachine):
+            x = torch.tensor(feats[["dot", "cosine", "popularity", "age_days"]].values, dtype=torch.float32)
+
+            with torch.no_grad():
+                preds = self.ranker(x)
+                scores = self.ranker(x).numpy().flatten()
+                ranked = [i for _, i in sorted(zip(scores, candidates), reverse=True)]
+        elif isinstance(self.ranker, MultiObjectiveRanker):
             x = torch.tensor(feats[["dot", "cosine", "popularity", "age_days"]].values, dtype=torch.float32)
 
             with torch.no_grad():
