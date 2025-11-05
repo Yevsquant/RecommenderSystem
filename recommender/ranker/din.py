@@ -38,10 +38,10 @@ class DIN(nn.Module):
             cand_emb: (batch, D)     - candidate item embeddings
         """
         B, N, D = hist_emb.shape
-        q = cand_emb.unsqueeze(1).expand(-1, N, -1)
+        q = cand_emb.unsqueeze(1).expand(-1, N, -1) #(B,N,D)
 
         # Build input for attention MLP: [q, h, q - h, q * h]
-        att_inp = torch.cat([q, hist_emb, q - hist_emb, q * hist_emb], dim=-1)
+        att_inp = torch.cat([q, hist_emb, q - hist_emb, q * hist_emb], dim=-1) #(B,N,4D)
         att_w = self.attn(att_inp).squeeze(-1) # (B,N)
         att_w = F.softmax(att_w, dim=1)
 

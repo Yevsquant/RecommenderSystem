@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import torch
+from typing import List
 from .data import build_feature_row
 from .rerank import rerank_diversity
 from recommender.ranker.factorization_machine import FactorizationMachine
@@ -9,19 +10,24 @@ from recommender.ranker.multitask_ranker import MultiObjectiveRanker
 from recommender.ranker.din import DIN
 
 class RecommenderSystem:
-    def __init__(self, meta, retrieval, ranker):
+    def __init__(self, meta, interactions, retrieval, ranker):
         self.meta = meta
         self.retrieval = retrieval
         self.ranker =ranker
+        self.interactions = interactions
 
-    def _get_last_n_items(self, user_id: int, N: int = 5):
+    def get_last_n_items(self, user_id: int, N: int = 5) -> List[int]:
         """Fetch last N interacted items (simulate with random sampling)."""
-        user_hist = self.meta.get("user_history", {})
-        if user_id in user_hist:
-            return user_hist[user_id][-N:]
-        else:
+        user_hist = self.interactions.groupby("user_id")["item_id"].apply(list).to_dict().get(user_id)
+        if user_hist is None or len(user_hist) == 0: # No relevant history => randomly pick items
             n_items = self.meta["item_emb"].shape[0]
-            return np.random.choice(range(n_items), size=N, replace=False)
+            return list(np.random.choice(range(n_items), size=N, replace=False))
+        elif len(user_hist) >= N:
+            return user_hist[-N:]
+        else:
+            selected_items = user_hist[:]
+            selected_items.extend(list(np.random.choice(range(n_items), size=N-len(user_hist), replace=False)))
+            return selected_items
 
     
     def recommend(self, uid, top_k=10):
@@ -52,9 +58,9 @@ class RecommenderSystem:
     
         elif isinstance(self.ranker, DIN):
             last_items = self.get_last_n_items(uid, N=self.ranker.last_n)
-            hist_emb = torch.tensor(self.meta["item_emb"][last_items], dtype=torch.float32).unsqueeze(0)
-            cand_embs = torch.tensor(self.meta["item_emb"][candidates], dtype=torch.float32)
-            hist_emb = hist_emb.repeat(len(candidates), 1, 1)
+            hist_emb = torch.tensor(self.meta["item_emb"][last_items], dtype=torch.float32).unsqueeze(0) #(1,N,D)
+            cand_embs = torch.tensor(self.meta["item_emb"][candidates], dtype=torch.float32) #(top_n,D)
+            hist_emb = hist_emb.repeat(len(candidates), 1, 1) #(top_n,N,D)
             with torch.no_grad():
                 scores = self.ranker(hist_emb, cand_embs).numpy().flatten()
     

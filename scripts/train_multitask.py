@@ -21,7 +21,7 @@ def main():
     torch.save(ranker.state_dict(), "models/MultiObjectiveRanker.pt")
 
     # # 3. Integrate into full recommender
-    # recsys = RecommenderSystem(meta, ranker=ranker)
+    # recsys = RecommenderSystem(meta, interactions, ranker=ranker)
 
     # # 4. Serve recommendations
     # recs = recsys.recommend(uid=0, top_k=10)

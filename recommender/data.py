@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 
-def simulate_data(n_users=500, n_items=800, n_interactions=8000, emb_dim=16, seed=42):
+def simulate_data(n_users=500, n_items=800, n_interactions=8000, emb_dim=32, seed=42):
     rng = np.random.default_rng(seed) # Random Number Generator
     user_emb = rng.normal(size=(n_users, emb_dim)) # Representation of users (by vectors)
     item_emb = rng.normal(size=(n_items, emb_dim)) # arr shape(n, emb_dim)

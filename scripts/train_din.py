@@ -32,8 +32,8 @@ def main():
         optimizer.step()
         print(f"[Epoch {epo+1}] Loss = {loss.item():.4f}")
     
-    torch.save(model.state_dict(), "models/din_ranker.pt")
-    print("✅ DIN model saved to models/din_ranker.pt")
+    torch.save(model.state_dict(), "models/DIN.pt")
+    print("✅ DIN model saved to models/DIN.pt")
 
 if __name__ == "__main__":
     main()

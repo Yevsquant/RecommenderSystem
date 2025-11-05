@@ -67,7 +67,7 @@ else:
     
 
 # Set up recommender system
-recsys = RecommenderSystem(meta, retrieval, ranker)
+recsys = RecommenderSystem(meta, interactions, retrieval, ranker)
 
 class RecResponse(BaseModel):
     user_id: int
