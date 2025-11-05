@@ -2,7 +2,6 @@
 
 ### Run the api:
 `
-uv run uvicorn api.main:app --reload
 RETRIEVAL=<retrieval class> RANKER=<ranker class> uv run uvicorn api.main:app --reload
 `
 
