@@ -4,7 +4,7 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
-class Ranker:
+class BaseRanker:
     def __init__(self):
         self.model = LogisticRegression(max_iter=200)
         self.scaler  = StandardScaler() # Normalize features

@@ -14,13 +14,13 @@ class FactorizationMachine(nn.Module):
         self.k_factors = k_factors
 
         self.bias = nn.Parameter(torch.zeros(1))
-        self.linear = nn.Parameter(torch.randn(n_features))
+        self.weights = nn.Parameter(torch.randn(n_features))
         self.v = nn.Parameter(torch.randn(n_features, k_factors))
 
         nn.init.xavier_uniform_(self.v)
 
     def forward(self, x):
-        lin = torch.matmul(x, self.linear) + self.bias
+        linear = torch.matmul(x, self.weights) + self.bias
 
         # .5 * ((xv)^2 - (x^2)(v^2))
         xv = torch.matmul(x, self.v)
@@ -28,7 +28,7 @@ class FactorizationMachine(nn.Module):
         x_sq_v_sq = torch.matmul(x*x, self.v*self.v)
         interaction = .5 * torch.sum(xv_sq - x_sq_v_sq)
 
-        y = lin.unsqueeze(1) + interaction
+        y = linear.unsqueeze(1) + interaction
         return torch.sigmoid(y)
     
     def compute_loss(self, preds, targets):

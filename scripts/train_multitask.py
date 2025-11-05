@@ -18,14 +18,14 @@ def main():
 
     # 2. Train model
     ranker = train_ranker(df, feature_cols, label_cols, input_dim=len(feature_cols), epochs=5)
-    torch.save(ranker.state_dict(), "models/multitask_ranker.pt")
+    torch.save(ranker.state_dict(), "models/MultiObjectiveRanker.pt")
 
-    # 3. Integrate into full recommender
-    recsys = RecommenderSystem(meta, ranker_model=ranker)
+    # # 3. Integrate into full recommender
+    # recsys = RecommenderSystem(meta, ranker=ranker)
 
-    # 4. Serve recommendations
-    recs = recsys.recommend(uid=0, top_k=10)
-    print("Top-10 recommendations:", recs)
+    # # 4. Serve recommendations
+    # recs = recsys.recommend(uid=0, top_k=10)
+    # print("Top-10 recommendations:", recs)
 
 if __name__ == "__main__":
     main()

@@ -61,7 +61,7 @@ class ItemCF:
         }
         print("[ItemCF] Similarity matrix built.")
 
-    def recommend(self, user_id: int, top_k: int = 10) -> List[int]:
+    def candidate_generation(self, user_id: int, top_n: int = 10) -> List[int]:
         """
         Generate candidate items for a user.
         Still based on the occurrence not the user rating.
@@ -75,7 +75,7 @@ class ItemCF:
                 self.items, key = lambda i: np.mean(list(self.item_similarity[i].values())),
                 reverse=True
             )
-            return popular[:top_k]
+            return popular[:top_n]
         
         scores = defaultdict(float)
         for i in interacted_items:
@@ -84,4 +84,4 @@ class ItemCF:
                     scores[j] += sim
         ranked = sorted(scores.items(), key=lambda x: -x[1])
 
-        return [i for i, _ in ranked[:top_k]]
+        return [i for i, _ in ranked[:top_n]]
