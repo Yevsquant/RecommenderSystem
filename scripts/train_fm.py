@@ -16,7 +16,7 @@ def main():
     y = torch.tensor(df["clicked"].values, dtype=torch.float32).unsqueeze(1)
 
     # 3. Initialize FM
-    model = FactorizationMachine(n_features=len(feature_cols), k_factors=8)
+    model = FactorizationMachine(n_features=len(feature_cols), k_factors=16)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
     # 4. Train
@@ -29,8 +29,8 @@ def main():
         print(f"[Epoch {epoch+1}] Loss = {loss.item():.4f}")
     
     # 5. Save model
-    torch.save(model.state_dict(), "models/fm_ranker.pt")
-    print("✅ FM model saved to models/fm_ranker.pt")
+    torch.save(model.state_dict(), "models/FactorizationMachine.pt")
+    print("✅ FM model saved to models/FactorizationMachine.pt")
 
 
 if __name__ == "__main__":
